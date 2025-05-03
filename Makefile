@@ -11,4 +11,4 @@ run:
 	./$(OUT)
 
 clean:
-	@rm -f main.o $(OUT)
+	@rm -f main.o $(OUT) || true
