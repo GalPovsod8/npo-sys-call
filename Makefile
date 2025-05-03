@@ -1,5 +1,5 @@
 SRC = main.asm
-OUT = sys_calls
+OUT = sys_callss
 
 all: build run
 
