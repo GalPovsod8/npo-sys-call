@@ -6,6 +6,9 @@ section .data
     file_mode equ 0o644                  ; Za open syscall (privzete pravice ob ustvarjanju)
     new_file_mode equ 0o640              ; Za chmod: rw-r-----
 
+    msg db "Unix time\n", 0
+    msg_len equ $ - msg
+    
 section .text
     global _start
 
@@ -41,6 +44,22 @@ _start:
     mov eax, 15           ; syscall: chmod
     mov ebx, file_name    ; kazalec na ime datoteke
     mov ecx, new_file_mode
+    int 0x80
+
+    ; ================================
+    ; KORAK 5: Pridobitev časa in zapis v datoteko
+    ; ================================
+
+    ; Kliči time(NULL)
+    xor ebx, ebx            ; NULL argument
+    mov eax, 13             ; syscall: time
+    int 0x80                ; vrne Unix čas v sekundah od 1970
+    mov ecx, eax            ; shrani čas v ECX
+
+    mov eax, 4              ; syscall: write
+    mov ebx, esi            ; file descriptor
+    mov ecx, msg            ; kazalec na niz (dummy timestamp)
+    mov edx, msg_len        ; dolžina niza
     int 0x80
 
     ; ================================
